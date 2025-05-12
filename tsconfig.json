@@ -6,6 +6,7 @@
         "preserveConstEnums": true,
         "sourceMap": true,
         "allowArbitraryExtensions": true,
+        "moduleResolution": "node"
 
     },
     "include": ["src/**/*"],
