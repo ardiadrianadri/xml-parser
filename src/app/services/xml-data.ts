@@ -27,6 +27,14 @@ class XmlData {
             return new ErrorApp(appResponses.XML_PARSE_ERROR, `The content ${xmlText.payload} couldnt be converted into a json`, err?.stack || 'XmlData.loadDAta');
         }
     }
+
+    clearData() {
+        this.xmlData = undefined;
+    }
+
+    isThereData(): boolean {
+        return !! this.xmlData;
+    }
 }
 
 export const xmlData = new XmlData();
