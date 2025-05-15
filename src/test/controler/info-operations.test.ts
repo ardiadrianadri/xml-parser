@@ -1,9 +1,114 @@
+/* eslint-disable no-var */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { existsSync } from 'fs';
+import { promisify } from 'util';
+import { convertXML } from 'simple-xml-to-json';
+
 import { infoOperations } from '../../app/controler';
 import { appResponses, ErrorApp, HelpNode, Response } from '../../app/entities';
 import { xmlData } from '../../app/services';
 
+jest.mock('fs', () => ({
+    readFile: jest.fn(),
+    existsSync: jest.fn(),
+    writeFile: jest.fn()
+}));
+
+var mockReadFileAsync = jest.fn();
+jest.mock('util', () => ({
+    promisify: () => mockReadFileAsync
+}));
+
+jest.mock('simple-xml-to-json', () => ({
+    convertXML: jest.fn()
+}));
+
+
 describe('Info operations controler', () => {
     const testPath = '/test/controller';
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    describe('Integration test', () => {
+        const xmlInfo = '<data>OK</data>';
+        const jsObject = {
+            data: {
+                content: 'OK'
+            }
+        };
+
+        beforeEach(() => {
+            xmlData.clearData();
+        });
+
+        describe('loadXmlFile method', () => {
+            it('should return an error XML_FILE_NOT_FOUND', async () => {
+                (existsSync as jest.Mock).mockReturnValue(false);
+                mockReadFileAsync.mockResolvedValue(xmlInfo);
+
+                const result = await infoOperations.loadXmlFile(testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.XML_FILE_NOT_FOUND);
+                expect(result.message).toContain(testPath);
+            });
+
+            it('should return an XML_READ_ERROR if the file reading fails', async () => {
+                const testError = new Error('test message');
+                (existsSync as jest.Mock).mockReturnValue(true);
+                mockReadFileAsync.mockRejectedValue(testError);
+
+                const result = await infoOperations.loadXmlFile(testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.XML_READ_ERROR);
+                expect(result.payload).toBe(testError.stack);
+            });
+
+            it('should return the jsObject if the file reading goes as expected', async () => {
+                (existsSync as jest.Mock).mockReturnValue(true);
+                (convertXML as jest.Mock).mockReturnValue(jsObject);
+                mockReadFileAsync.mockResolvedValue(xmlInfo);
+
+                const result = await infoOperations.loadXmlFile(testPath);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(jsObject);
+                expect(convertXML).toHaveBeenCalledWith(xmlInfo);
+                expect(xmlData.isThereData()).toBe(true);
+            });
+
+            it('should return DATA_WILL_BE_LOST error if there is alreadey data stored', async () => {
+                (existsSync as jest.Mock).mockReturnValue(true);
+                (convertXML as jest.Mock).mockReturnValue(jsObject);
+                mockReadFileAsync.mockResolvedValue(xmlInfo);
+
+                await infoOperations.loadXmlFile(testPath);
+                const result = await infoOperations.loadXmlFile(testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.DATA_WILL_BE_LOST);
+                expect(convertXML).toHaveBeenCalledTimes(1);
+            });
+
+            it('should return the jsObject despite that there is data stored if we run the loadXmlFile in force mode', async () => {
+                (existsSync as jest.Mock).mockReturnValue(true);
+                (convertXML as jest.Mock).mockReturnValue(jsObject);
+                mockReadFileAsync.mockResolvedValue(xmlInfo);
+
+                await infoOperations.loadXmlFile(testPath);
+                const result = await infoOperations.loadXmlFile(testPath, true);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(jsObject);
+                expect(convertXML).toHaveBeenCalledTimes(2);
+            });
+        });
+    });
 
     describe('Unit test', () => {
         describe('appHelp method', () => {
