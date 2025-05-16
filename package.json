@@ -5,15 +5,19 @@
   "license": "MIT",
   "author": "ardiadrianadri",
   "type": "module",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node ./dist/index.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.3",
+    "@types/prompts": "^2.4.9",
     "eslint": "^9.26.0",
     "eslint-config-google": "^0.14.0",
     "globals": "^16.0.0",
@@ -24,6 +28,8 @@
     "typescript-eslint": "^8.31.1"
   },
   "dependencies": {
+    "prompts": "^2.4.2",
+    "rxjs": "^7.8.2",
     "simple-xml-to-json": "^1.2.3"
   }
 }

@@ -6,7 +6,9 @@
         "preserveConstEnums": true,
         "sourceMap": true,
         "allowArbitraryExtensions": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "outDir": "dist/",
+        "allowSyntheticDefaultImports": true
 
     },
     "include": ["src/**/*"],

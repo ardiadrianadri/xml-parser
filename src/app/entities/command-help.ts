@@ -24,6 +24,10 @@ export const commandHelp: Record<string, any> = {
                 }
             }
         }
+    },
+    exit: {
+        text: 'Close the app',
+        arg: false
     }
 };
 
