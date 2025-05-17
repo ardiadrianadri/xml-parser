@@ -20,6 +20,19 @@ class InfoOperations {
         
         const payload = [];
 
+        if (commands.length === 0) {
+            for (const option in commandHelp) {
+                payload.push (
+                    new HelpNode(
+                        option,
+                        commandHelp[option].text
+                    )
+                );
+            }
+
+            return new Response(appResponses.OK, 'Base commands', payload);
+        }
+
         while(command && index < commands.length) {
             command = command?.nodes[commands[index++]];
         }
@@ -38,7 +51,7 @@ class InfoOperations {
             return new Response(appResponses.OK, 'Command found', payload);
         }
 
-        return new ErrorApp(appResponses.INVALID_COMMAND_ERROR, `The command ${commands.length === 0 ? '<empty>' : commands.join(' ')} is not a valid command`, new Error().stack);
+        return new ErrorApp(appResponses.INVALID_COMMAND_ERROR, `The command ${commands.join(' ')} is not a valid command`, new Error().stack);
     }
 }
 

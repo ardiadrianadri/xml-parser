@@ -5,7 +5,7 @@ import { promisify } from 'util';
 import { convertXML } from 'simple-xml-to-json';
 
 import { infoOperations } from '../../app/controler';
-import { appResponses, ErrorApp, HelpNode, Response } from '../../app/entities';
+import { appResponses, commandHelp, ErrorApp, HelpNode, Response } from '../../app/entities';
 import { xmlData } from '../../app/services';
 
 jest.mock('fs', () => ({
@@ -112,12 +112,17 @@ describe('Info operations controler', () => {
 
     describe('Unit test', () => {
         describe('appHelp method', () => {
-            it('should returna an error INVALDID_COMMAND_ERROR if the command list is empty', () => {
+            it('should return a list of all the base commands if the commands list is empty', () => {
+                const initialCommands = Object.keys(commandHelp)
+                    .map((command: string) => new HelpNode(
+                        command,
+                        commandHelp[command].text
+                    ));
                 const result = infoOperations.appHelp([]);
 
-                expect(result).toBeInstanceOf(ErrorApp);
-                expect(result.code).toEqual(appResponses.INVALID_COMMAND_ERROR);
-                expect(result.message).toContain('<empty>');
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(initialCommands);
             });
 
             it('should return an error INVALID_COMMAND_ERROR if the first command is an unknown command', () => {
