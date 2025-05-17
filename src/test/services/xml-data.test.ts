@@ -1,16 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-var */
-import { convertXML } from 'simple-xml-to-json';
+import readXml from 'simple-xml-to-json';
 import { existsSync } from 'fs';
 import { promisify } from 'util';
 
 import { files } from '../../app/datasource';
 import { appResponses, ErrorApp, Response } from '../../app/entities';
 import { xmlData } from '../../app/services';
-
-jest.mock('simple-xml-to-json', () => ({
-    convertXML: jest.fn()
-}));
 
 jest.mock('fs', () => ({
     readFile: jest.fn(),
@@ -63,12 +59,12 @@ describe('Service XmlData', () => {
 
             it('should return an JS Object created from the XML file if everything goes as expected', async () => {
                 (existsSync as jest.Mock).mockReturnValue(true);
-                (convertXML as jest.Mock).mockReturnValue(jsObject);
+                const spyOnConvertXML = jest.spyOn(readXml ,'convertXML').mockReturnValue(jsObject);
                 mockReadFileAsync.mockResolvedValue(xmlInfo);
 
                 const result = await xmlData.loadData(testPath);
 
-                expect((convertXML as jest.Mock)).toHaveBeenCalledWith(xmlInfo);
+                expect(spyOnConvertXML).toHaveBeenCalledWith(xmlInfo);
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
                 expect(result.payload).toEqual(jsObject);
@@ -107,7 +103,7 @@ describe('Service XmlData', () => {
             it('should return an error if the convertXML library fails', async () => {
                 const err = new Error('test error');
                 (files.readFile as jest.Mock).mockResolvedValue(xmlInfo);
-                (convertXML as jest.Mock).mockImplementation(() => {
+                (readXml.convertXML as jest.Mock).mockImplementation(() => {
                     throw err;
                 });
 
@@ -121,7 +117,7 @@ describe('Service XmlData', () => {
             it('should restun the class path if the error throw by convertXML doesnt have stack trace', async () => {
                 const err = 'test error';
                 (files.readFile as jest.Mock).mockResolvedValue(xmlInfo);
-                (convertXML as jest.Mock).mockImplementation(() => {
+                (readXml.convertXML as jest.Mock).mockImplementation(() => {
                     throw err;
                 });
 
@@ -134,7 +130,7 @@ describe('Service XmlData', () => {
 
             it('should return an JS object if everything goes right', async () => {
                 (files.readFile as jest.Mock).mockResolvedValue(xmlInfo);
-                (convertXML as jest.Mock).mockReturnValue(jsObject);
+                (readXml.convertXML as jest.Mock).mockReturnValue(jsObject);
 
                 const result = await xmlData.loadData(testPath);
 
@@ -156,7 +152,7 @@ describe('Service XmlData', () => {
 
             it('should return true if there is data stored', async () => {
                 (files.readFile as jest.Mock).mockResolvedValue(xmlInfo);
-                (convertXML as jest.Mock).mockReturnValue(jsObject);
+                (readXml.convertXML as jest.Mock).mockReturnValue(jsObject);
 
                 await xmlData.loadData(testPath);
 

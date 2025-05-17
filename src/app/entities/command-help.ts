@@ -25,6 +25,32 @@ export const commandHelp: Record<string, any> = {
             }
         }
     },
+    create: {
+        text: 'Create a new view based on the data loaded',
+        arg: false,
+        nodes: {
+            view: {
+                text: 'Create a new view from the data loaded',
+                arg: false,
+                nodes: {
+                    named: {
+                        text: 'Create a new view from the data loaded and stored with a name',
+                        arg: false,
+                        nodes: {
+                            query: {
+                                text: 'Query to select the data to create the query',
+                                arg: true
+                            },
+                            name: {
+                                text: 'Name given to the view',
+                                arg: true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     exit: {
         text: 'Close the app',
         arg: false
