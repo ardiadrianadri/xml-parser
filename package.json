@@ -8,9 +8,7 @@
   "main": "index.ts",
   "scripts": {
     "test": "jest",
-    "build": "tsc",
-    "prestart": "npm run build",
-    "start": "node ./dist/index.js"
+    "start": "tsx ./src/app/index.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
@@ -30,6 +28,7 @@
   "dependencies": {
     "prompts": "^2.4.2",
     "rxjs": "^7.8.2",
-    "simple-xml-to-json": "^1.2.3"
+    "simple-xml-to-json": "^1.2.3",
+    "tsx": "^4.19.4"
   }
 }

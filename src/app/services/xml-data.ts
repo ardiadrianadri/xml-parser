@@ -1,4 +1,4 @@
-import { convertXML } from 'simple-xml-to-json';
+import xmlreader from 'simple-xml-to-json';
 
 import { files } from '../datasource';
 import { appResponses, ErrorApp, Response } from '../entities';
@@ -19,7 +19,7 @@ class XmlData {
         }
 
         try {
-            this.xmlData = convertXML(xmlText.payload);
+            this.xmlData = xmlreader.convertXML(xmlText.payload);
 
             return new Response(appResponses.OK, 'The xmlData was parsed successfully', this.xmlData);
         }
