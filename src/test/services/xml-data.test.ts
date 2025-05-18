@@ -139,7 +139,7 @@ describe('Service XmlData', () => {
                 expect(result.payload).toEqual(jsObject);
             });
         });
-        describe('isThereData methd', () => {
+        describe('isThereData method', () => {
             beforeEach(() => {
                 xmlData.clearData();
             });
@@ -157,6 +157,155 @@ describe('Service XmlData', () => {
                 await xmlData.loadData(testPath);
 
                 expect(xmlData.isThereData()).toBe(true);
+            });
+        });
+        describe('doQuery method', () => {
+            const infoFromXml = {
+                    node: {
+                        children: [{
+                            node0: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node1: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node2: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node3: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node4: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            }
+                        }, {
+                            node0: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node1: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node2: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node3: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node4: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            }
+                        }]
+                    }
+                };
+            beforeEach(async () => {
+                (files.readFile as jest.Mock).mockResolvedValue(xmlInfo);
+                (readXml.convertXML as jest.Mock).mockReturnValue(infoFromXml);
+
+                await xmlData.loadData(testPath);
+            });
+
+            it('should return an QUERY_NOT_FOUND_DATA if the xmlData is empty', () => {
+                const testPath = 'unit.test.path';
+                xmlData.clearData();
+
+                const result = xmlData.doQuery(testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.QUERY_NOT_FOUND_DATA);
+                expect(result.message).toContain(testPath);
+            });
+
+            it('should return an QUERY_NOT_FOUND_DATA if the path doesnt match with any attribute', () => {
+                const testPath = 'node.children.node10';
+
+                const result = xmlData.doQuery(testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.QUERY_NOT_FOUND_DATA);
+                expect(result.message).toContain(testPath);
+            });
+
+            it('should return an QUERY_NOT_FOUND_DATA if some of the middle attributes in the path doesnt exist', () => {
+                const testPath = 'node.test.node01';
+
+                const result = xmlData.doQuery(testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.QUERY_NOT_FOUND_DATA);
+                expect(result.message).toContain(testPath);
+            });
+
+            it('should return a JS Object if the path points to an Object', () => {
+                const testPath = 'node.children.node1';
+                const expectedResult = infoFromXml.node.children
+                    .map((value) => value.node1);
+
+                const result = xmlData.doQuery(testPath);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+
+            it('should resturn a list of valus if the path points to a basic value', () => {
+                const testPath = 'node.children.node3.children.name';
+                const expectedResult = ['name', 'name'];
+
+                const result = xmlData.doQuery(testPath);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
             });
         });
     });

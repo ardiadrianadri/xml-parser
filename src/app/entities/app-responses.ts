@@ -8,5 +8,6 @@ export const appResponses = {
     XML_PARSE_ERROR: new ResponseCode('XML_PARSE_ERROR', 'There was an error while we were trying to convert the xml text into a json'),
     INVALID_PATH_ERROR: new ResponseCode('INVALID_PATH_ERROR', 'The path we got isnt a valid path'),
     INVALID_COMMAND_ERROR: new ResponseCode('INVALID_COMMAND_ERROR', 'The command introduced is not a valid command'),
-    DATA_WILL_BE_LOST: new ResponseCode('DATA_WILL_BE_LOST', 'There is already data loaded that will be overwritten if we load a new file')
+    DATA_WILL_BE_LOST: new ResponseCode('DATA_WILL_BE_LOST', 'There is already data loaded that will be overwritten if we load a new file'),
+    QUERY_NOT_FOUND_DATA: new ResponseCode('QUERY_NOT_FOUND_DATA', 'The query cant find any data')
 };
