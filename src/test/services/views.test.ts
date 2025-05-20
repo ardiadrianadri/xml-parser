@@ -1,16 +1,17 @@
 import { appResponses, ErrorApp, Response } from '../../app/entities';
-import { views} from '../../app/services';
+import { views } from '../../app/services';
 
 describe('Service Views', () => {
     describe('Unit test', () => {
-        describe('storeView method', () => {
-            const data = {
-                info: {
-                    content: 'test'
-                }
-            };
+        const data = {
+            info: {
+                content: 'test'
+            }
+        };
+        const testName = 'testView';
 
-            const testName = 'testView';
+        describe('storeView method', () => {
+
             beforeEach(() => {
                 views.removeAllViews();
             });
@@ -43,6 +44,36 @@ describe('Service Views', () => {
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
                 expect(result.payload).toEqual(data);
+            });
+        });
+
+        describe('listViews method', () => {
+            const testName01 = 'firstTest';
+            const testName02 = 'secondTest';
+
+            beforeEach(() => {
+                views.storeView(testName01, data);
+                views.storeView(testName02, data);
+            });
+
+            it('should return an empty array if there isnt any view created', () => {
+                const expectedResult: string[] = [];
+                
+                views.removeAllViews();
+                const result = views.listViews();
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+
+            it('should return a list of the names of the current views stored', () => {
+                const expectedResult = [testName01, testName02];
+                const result = views.listViews();
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
             });
         });
     });

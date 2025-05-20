@@ -16,6 +16,10 @@ class Views {
     public removeAllViews() {
         this.viewsStored = {};
     }
+
+    public listViews(): Response<string[]> {
+        return new Response(appResponses.OK, 'List of the current views', Object.keys(this.viewsStored));
+    }
 }
 
 export const views = new Views();
