@@ -9,5 +9,8 @@ export const appResponses = {
     INVALID_PATH_ERROR: new ResponseCode('INVALID_PATH_ERROR', 'The path we got isnt a valid path'),
     INVALID_COMMAND_ERROR: new ResponseCode('INVALID_COMMAND_ERROR', 'The command introduced is not a valid command'),
     DATA_WILL_BE_LOST: new ResponseCode('DATA_WILL_BE_LOST', 'There is already data loaded that will be overwritten if we load a new file'),
-    QUERY_NOT_FOUND_DATA: new ResponseCode('QUERY_NOT_FOUND_DATA', 'The query cant find any data')
+    QUERY_NOT_FOUND_DATA: new ResponseCode('QUERY_NOT_FOUND_DATA', 'The query cant find any data'),
+    DATA_TO_VIEW_EMPTY: new ResponseCode('DATA_TO_VIEW_EMPTY','The data to be stored in a view is null, undefined or an empty string'),
+    INVALID_QUERY_VIEW: new ResponseCode('INVALID_QUERY_VIEW', 'The query to create a new view is empty'),
+    INVALID_NAME_VIEW: new ResponseCode('INVALID_NAME_VIEW', 'The name for the view is empty'),
 };

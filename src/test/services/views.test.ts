@@ -1,4 +1,4 @@
-import { appResponses, Response } from '../../app/entities';
+import { appResponses, ErrorApp, Response } from '../../app/entities';
 import { views} from '../../app/services';
 
 describe('Service Views', () => {
@@ -13,6 +13,13 @@ describe('Service Views', () => {
             const testName = 'testView';
             beforeEach(() => {
                 views.removeAllViews();
+            });
+
+            it('should return an DATA_TO_VIEW_EMPTY error if the data input is empty', () => {
+                const result = views.storeView(testName, undefined);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.DATA_TO_VIEW_EMPTY);
             });
 
             it('should create a new view if the view doesnt exist', () => {
