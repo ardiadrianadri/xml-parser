@@ -23,6 +23,20 @@ jest.mock('simple-xml-to-json', () => ({
     convertXML: jest.fn()
 }));
 
+async function createViews(viewsNames: string[], data: any, viewPath: string, xmlInfo: string, testPath: string) {
+    mockReadFileAsync.mockResolvedValue(xmlInfo);
+    (existsSync as jest.Mock).mockReturnValue(true);
+    (convertXML as jest.Mock).mockReturnValue(data);
+    xmlData.clearData();
+    views.removeAllViews();
+
+    await infoOperations.loadXmlFile(testPath);
+    
+    for(const name of viewsNames) {
+        infoOperations.createViewNamed(viewPath, name);
+    }
+}
+
 
 describe('Info operations controler', () => {
     const testPath = '/test/controller';
@@ -38,6 +52,94 @@ describe('Info operations controler', () => {
                 content: 'OK'
             }
         };
+        const infoFromXml = {
+                    node: {
+                        children: [{
+                            node0: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node1: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node2: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node3: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node4: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            }
+                        }, {
+                            node0: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node1: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node2: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node3: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node4: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            }
+                        }]
+                    }
+                };
+                const viewPath = 'node.children.node3.children.name';
 
         describe('loadXmlFile method', () => {
             beforeEach(() => {
@@ -234,104 +336,13 @@ describe('Info operations controler', () => {
             const veiwName02 = 'intTest02';
 
             beforeEach(async () => {
-                const infoFromXml = {
-                    node: {
-                        children: [{
-                            node0: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node1: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node2: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node3: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node4: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            }
-                        }, {
-                            node0: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node1: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node2: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node3: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node4: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            }
-                        }]
-                    }
-                };
-                const viewPath = 'node.children.node3.children.name';
-
-                mockReadFileAsync.mockResolvedValue(xmlInfo);
-                (existsSync as jest.Mock).mockReturnValue(true);
-                (convertXML as jest.Mock).mockReturnValue(infoFromXml);
-                xmlData.clearData();
-                views.removeAllViews();
-
-                await infoOperations.loadXmlFile(testPath);
-                infoOperations.createViewNamed(viewPath, veiwName01);
-                infoOperations.createViewNamed(viewPath, veiwName02);
+                await createViews(
+                    [veiwName01, veiwName02],
+                    infoFromXml,
+                    viewPath,
+                    xmlInfo,
+                    testPath
+                );
             });
 
             it('should return an empty array if there isnt any view stored', () => {
@@ -350,6 +361,46 @@ describe('Info operations controler', () => {
 
                 const result = infoOperations.getAllViews();
                 
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+        });
+
+        describe('getOneView method', () => {
+            const veiwName01 = 'intTest01';
+            const veiwName02 = 'intTest02';
+
+            beforeEach(async () => {
+                await createViews(
+                    [veiwName01, veiwName02],
+                    infoFromXml,
+                    viewPath,
+                    xmlInfo,
+                    testPath
+                );
+            });
+
+            it('should return INVALID_NAME_VIEW if the input name is not valid', () => {
+                const result = infoOperations.getOneView('');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+            });
+
+            it('should return VIEW_NOT_FOUND if there isnt any view stored with the name', () => {
+                const name = 'test';
+                const result = infoOperations.getOneView(name);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+                expect(result.message).toContain(name);
+            });
+
+            it('should return the data stored in the name', () => {
+                const expectedResult = ['name', 'name'];
+                const result = infoOperations.getOneView(veiwName01);
+
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
                 expect(result.payload).toEqual(expectedResult);
@@ -393,8 +444,8 @@ describe('Info operations controler', () => {
             it('should return HelpNode with the next posibilities in the command lines', () => {
                 const command = ['load', 'xml', 'file'];
                 const expectedResult: HelpNode[] = [
-                    new HelpNode('path', 'The path where the file is', true),
-                    new HelpNode('force', 'Overwrite the previous data', true)
+                    new HelpNode('path', 'The path where the file is', true, 'text'),
+                    new HelpNode('force', 'Overwrite the previous data', true, 'boolean')
                 ];
 
                 const result = infoOperations.appHelp(command);
@@ -548,6 +599,28 @@ describe('Info operations controler', () => {
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
                 expect(result.payload).toEqual(expectedResult);
+            });
+        });
+
+        describe('getOneView method', () => {
+            const testName = 'testName';
+
+            beforeEach(() => {
+                views.getViewData = jest.fn();
+            });
+
+            it('should return INVALID_NAME_VIEW if the input name is not a valid name', () => {
+                const result = infoOperations.getOneView('');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+                expect(views.getViewData).not.toHaveBeenCalled();
+            });
+
+            it('should call the views.getViewData if the input name is valid', () => {
+                infoOperations.getOneView(testName);
+
+                expect(views.getViewData).toHaveBeenCalledWith(testName);
             });
         });
     });

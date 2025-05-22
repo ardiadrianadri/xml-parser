@@ -20,6 +20,12 @@ class Views {
     public listViews(): Response<string[]> {
         return new Response(appResponses.OK, 'List of the current views', Object.keys(this.viewsStored));
     }
+
+    public getViewData(name: string): Response<any> | ErrorApp {
+        return this.viewsStored[name]
+            ? new Response(appResponses.OK, `Content of the view ${name}`, this.viewsStored[name])
+            : new ErrorApp(appResponses.VIEW_NOT_FOUND, `There isnt any view with the name ${name}`, new Error().stack);
+    }
 }
 
 export const views = new Views();

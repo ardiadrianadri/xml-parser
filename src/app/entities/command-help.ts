@@ -73,6 +73,24 @@ export const commandHelp: Record<string, any> = {
                         nodes: {}
                     }
                 }
+            },
+            one: {
+                text: 'Get the content of one element stored in the app',
+                arg: false,
+                nodes: {
+                    view: {
+                        text: 'Check the content of one view',
+                        arg: false,
+                        nodes: {
+                            name: {
+                                text: 'Name given to the view',
+                                arg: true,
+                                required: true,
+                                type: 'text'
+                            }
+                        }
+                    }
+                }
             }
         }
     },

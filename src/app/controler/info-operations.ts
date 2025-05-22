@@ -76,6 +76,14 @@ class InfoOperations {
     public getAllViews(): Response<string[]> {
         return views.listViews();
     }
+
+    public getOneView(name: string): Response<any> | ErrorApp {
+        if(!name) {
+            return new ErrorApp(appResponses.INVALID_NAME_VIEW, 'The name for the view is empty', new Error().stack);
+        }
+
+        return views.getViewData(name);
+    }
 }
 
 export const infoOperations = new InfoOperations();

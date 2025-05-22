@@ -6,7 +6,7 @@ import { promisify } from 'util';
 
 import { files } from '../../app/datasource';
 import { appResponses, ErrorApp, Response } from '../../app/entities';
-import { xmlData } from '../../app/services';
+import { views, xmlData } from '../../app/services';
 
 jest.mock('fs', () => ({
     readFile: jest.fn(),
@@ -306,6 +306,36 @@ describe('Service XmlData', () => {
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
                 expect(result.payload).toEqual(expectedResult);
+            });
+        });
+        describe('getViewData method', () => {
+            const data = {
+                testData: {
+                    node: 'test'
+                }
+            };
+
+            const testName = 'testName';
+            beforeAll(() => {
+                views.removeAllViews();
+                views.storeView(testName, data);
+            });
+
+            it('should return an error VIEW_NOT_FOUND it there isnt any view stored with the input name', () => {
+                const name = 'bar';
+                const result = views.getViewData(name);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+                expect(result.message).toContain(name);
+            });
+
+            it('should return the view content if there is a view stored with the input name', () => {
+                const result = views.getViewData(testName);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(data);
             });
         });
     });

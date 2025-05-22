@@ -1,5 +1,5 @@
-import { Response } from "./response";
-import { ResponseCode } from "./response-code";
+import { Response } from './response';
+import { ResponseCode } from './response-code';
 
 export class ErrorApp extends Response<string> {
     constructor(
@@ -7,6 +7,6 @@ export class ErrorApp extends Response<string> {
         message: string,
         stackTrace: string
     ) {
-        super(code, message, stackTrace)
+        super(code, message, stackTrace);
     }
 }

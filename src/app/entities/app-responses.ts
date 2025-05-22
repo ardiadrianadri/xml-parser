@@ -13,4 +13,5 @@ export const appResponses = {
     DATA_TO_VIEW_EMPTY: new ResponseCode('DATA_TO_VIEW_EMPTY','The data to be stored in a view is null, undefined or an empty string'),
     INVALID_QUERY_VIEW: new ResponseCode('INVALID_QUERY_VIEW', 'The query to create a new view is empty'),
     INVALID_NAME_VIEW: new ResponseCode('INVALID_NAME_VIEW', 'The name for the view is empty'),
+    VIEW_NOT_FOUND: new ResponseCode('VIEW_NOT_FOUND', 'We couldnt find any view linked with the name'),
 };
