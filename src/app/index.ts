@@ -15,8 +15,16 @@ async function validateCommand(command: string): Promise<Response<any> | ErrorAp
         ? []
         : command.split(' ');
 
-    if (commandSequence.length < 4) {
+    if (commandSequence.length < 3) {
         return infoOperations.appHelp(commandSequence);
+    }
+
+    if(commandSequence.length === 3) {
+        const help = infoOperations.appHelp(commandSequence);
+
+        if (Object.keys(help.payload).length ) {
+            return help;
+        }
     }
 
     const method: string = commandSequence.slice(0,3).reduce((acc, part, index) => {

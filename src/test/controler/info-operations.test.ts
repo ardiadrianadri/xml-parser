@@ -228,6 +228,133 @@ describe('Info operations controler', () => {
                 expect(result.payload).toEqual(expectedResult);
             });
         });
+
+        describe('getAllViews method', () => {
+            const veiwName01 = 'intTest01';
+            const veiwName02 = 'intTest02';
+
+            beforeEach(async () => {
+                const infoFromXml = {
+                    node: {
+                        children: [{
+                            node0: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node1: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node2: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node3: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node4: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            }
+                        }, {
+                            node0: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node1: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node2: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node3: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            },
+                            node4: {
+                                children: [
+                                    {
+                                        data: 'data',
+                                        name: 'name'
+                                    }
+                                ]
+                            }
+                        }]
+                    }
+                };
+                const viewPath = 'node.children.node3.children.name';
+
+                mockReadFileAsync.mockResolvedValue(xmlInfo);
+                (existsSync as jest.Mock).mockReturnValue(true);
+                (convertXML as jest.Mock).mockReturnValue(infoFromXml);
+                xmlData.clearData();
+                views.removeAllViews();
+
+                await infoOperations.loadXmlFile(testPath);
+                infoOperations.createViewNamed(viewPath, veiwName01);
+                infoOperations.createViewNamed(viewPath, veiwName02);
+            });
+
+            it('should return an empty array if there isnt any view stored', () => {
+                const expectedResult: string[] = [];
+                views.removeAllViews();
+
+                const result = infoOperations.getAllViews();
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+
+            it('should return a list wiht the names of all the views stored', () => {
+                const expectedResult = [veiwName01, veiwName02];
+
+                const result = infoOperations.getAllViews();
+                
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+        });
     });
 
     describe('Unit test', () => {
@@ -391,6 +518,36 @@ describe('Info operations controler', () => {
                 infoOperations.createViewNamed(query, viewName);
 
                 expect(views.storeView).toHaveBeenCalledWith(viewName, queryObj);
+            });
+        });
+
+        describe('getAllViews method', () => {
+            beforeEach(() => {
+                views.listViews = jest.fn();
+            });
+
+            it('should return an empty list if there isnt any view stored', () => {
+                const expectResult: string[] = [];
+                (views.listViews as jest.Mock).mockReturnValue(
+                    new Response(appResponses.OK, 'list of views', expectResult)
+                );
+
+                const result = infoOperations.getAllViews();
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectResult);
+            });
+
+            it('should return a list of all the views stored in the app', () => {
+                const expectedResult = ['test01', 'test02'];
+                (views.listViews as jest.Mock).mockReturnValue(
+                    new Response(appResponses.OK, 'list of views', expectedResult)
+                );
+
+                const result = infoOperations.getAllViews();
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
             });
         });
     });

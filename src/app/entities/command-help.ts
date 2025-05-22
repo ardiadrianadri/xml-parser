@@ -13,11 +13,15 @@ export const commandHelp: Record<string, any> = {
                         nodes: {
                             path: {
                                 text: 'The path where the file is',
-                                arg: true
+                                arg: true,
+                                required: true,
+                                type: 'text'
                             },
                             force: {
                                 text: 'Overwrite the previous data',
-                                arg: true
+                                arg: true,
+                                required: false,
+                                type: 'boolean'
                             }
                         }
                     }
@@ -39,13 +43,34 @@ export const commandHelp: Record<string, any> = {
                         nodes: {
                             query: {
                                 text: 'Query to select the data to create the query',
-                                arg: true
+                                arg: true,
+                                required: true,
+                                type: 'text'
                             },
                             name: {
                                 text: 'Name given to the view',
-                                arg: true
+                                arg: true,
+                                required: true,
+                                type: 'text'
                             }
                         }
+                    }
+                }
+            }
+        }
+    },
+    get: {
+        text: 'Get information stored in the app like views, for example',
+        arg: false,
+        nodes: {
+            all: {
+                text: 'Get all the information stored of the type written in the next level',
+                arg: false,
+                nodes: {
+                    views: {
+                        text: 'Get the information about views stores in the app',
+                        arg: false,
+                        nodes: {}
                     }
                 }
             }
@@ -61,6 +86,7 @@ export class HelpNode {
     constructor(
         public option: string,
         public text: string,
-        public isArgument = false
+        public isArgument = false,
+        public type?: string,
     ) {}
 }

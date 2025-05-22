@@ -43,7 +43,8 @@ class InfoOperations {
                     new HelpNode(
                         option,
                         command.nodes[option].text,
-                        command.nodes[option].arg
+                        command.nodes[option].arg,
+                        command.nodes[option]?.type
                     )
                 );
             }
@@ -70,6 +71,10 @@ class InfoOperations {
         }
 
         return views.storeView(name, queryResult.payload);
+    }
+
+    public getAllViews(): Response<string[]> {
+        return views.listViews();
     }
 }
 
