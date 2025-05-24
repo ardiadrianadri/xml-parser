@@ -13,7 +13,9 @@ const subscription = answerObs.subscribe(getAnswer);
 async function validateCommand(command: string): Promise<Response<any> | ErrorApp> {
     const commandSequence = !command
         ? []
-        : command.split(' ');
+        : command.split(' ')
+        .map(part => part.trim())
+        .filter(part => part.length > 0);
 
     if (commandSequence.length < 3) {
         return infoOperations.appHelp(commandSequence);

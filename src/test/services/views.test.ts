@@ -76,5 +76,49 @@ describe('Service Views', () => {
                 expect(result.payload).toEqual(expectedResult);
             });
         });
+
+        describe('splitViewData method', () => {
+            const nameView01 = 'view01';
+            const nameView02 = 'view02';
+            const dataView01 = 'test1,test2,test3';
+            const dataView02 = ['test1,test2', 'test3,test4'];
+
+            beforeEach(() => {
+                views.removeAllViews();
+                views.storeView(nameView01, dataView01);
+                views.storeView(nameView02, dataView02);
+            });
+
+            it('should return an error if the view doesnt exist', () => {
+                const result = views.splitViewData('nonExistentView', ',');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+            });
+
+            it('should return an error if the view is not splittable', () => {
+                const nameView03 = 'view03';
+                const dataView03 = { key: 'value' };
+
+                views.storeView(nameView03, dataView03);
+                const result = views.splitViewData(nameView03, ',');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_SPLITABLE);
+            });
+
+            it('should return the splitted data of the view if it is splittable', () => {
+                const result01 = views.splitViewData(nameView01, ',');
+                const result02 = views.splitViewData(nameView02, ',');
+
+                expect(result01).toBeInstanceOf(Response);
+                expect(result01.code).toEqual(appResponses.OK);
+                expect(result01.payload).toEqual(['test1', 'test2', 'test3']);
+
+                expect(result02).toBeInstanceOf(Response);
+                expect(result02.code).toEqual(appResponses.OK);
+                expect(result02.payload).toEqual(['test1', 'test2', 'test3', 'test4']);
+            });
+        });
     });
 });

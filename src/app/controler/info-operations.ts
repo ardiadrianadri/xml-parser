@@ -84,6 +84,24 @@ class InfoOperations {
 
         return views.getViewData(name);
     }
+
+    public splitViewBy(name: string, separator: string): Response<any> | ErrorApp {
+        if(!name) {
+            return new ErrorApp(appResponses.INVALID_NAME_VIEW, 'The name for the view is empty', new Error().stack);
+        }
+
+        if(!separator) {
+            return new ErrorApp(appResponses.INVALID_SEPARATOR_VIEW, 'The separator for the view is empty', new Error().stack);
+        }
+
+        const newView =  views.splitViewData(name, separator);
+
+        if (newView instanceof ErrorApp) {
+            return newView;
+        }
+
+        return views.storeView(name + '_split', newView.payload);
+    }
 }
 
 export const infoOperations = new InfoOperations();

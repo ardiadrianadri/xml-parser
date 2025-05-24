@@ -27,8 +27,6 @@ async function createViews(viewsNames: string[], data: any, viewPath: string, xm
     mockReadFileAsync.mockResolvedValue(xmlInfo);
     (existsSync as jest.Mock).mockReturnValue(true);
     (convertXML as jest.Mock).mockReturnValue(data);
-    xmlData.clearData();
-    views.removeAllViews();
 
     await infoOperations.loadXmlFile(testPath);
     
@@ -336,6 +334,9 @@ describe('Info operations controler', () => {
             const veiwName02 = 'intTest02';
 
             beforeEach(async () => {
+                xmlData.clearData();
+                views.removeAllViews();
+
                 await createViews(
                     [veiwName01, veiwName02],
                     infoFromXml,
@@ -372,6 +373,9 @@ describe('Info operations controler', () => {
             const veiwName02 = 'intTest02';
 
             beforeEach(async () => {
+                xmlData.clearData();
+                views.removeAllViews();
+
                 await createViews(
                     [veiwName01, veiwName02],
                     infoFromXml,
@@ -400,6 +404,145 @@ describe('Info operations controler', () => {
             it('should return the data stored in the name', () => {
                 const expectedResult = ['name', 'name'];
                 const result = infoOperations.getOneView(veiwName01);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+        });
+
+        describe('splitViewBy method', () => {
+            const dataFromXml = {
+                node: {
+                    children: [
+                        {
+                            data: {
+                                array: ['test01,test02', 'test03,test04'],
+                                string: 'test01,test02,test03,test04',
+                                arrayObj: [{ value: 'test01'}, {value: 'test02'}],
+                                arrayObjSp: [{ value: 'test01,test02'}, 'test03,test04']
+                            }
+                        }
+                    ]
+                }
+            };
+
+            const path01 = 'node.children.data';
+            const path02 = 'node.children.data.array';
+            const path03 = 'node.children.data.string';
+            const path04 = 'node.children.data.arrayObj';
+            const path05 = 'node.children.data.arrayObjSp';
+            const name01 = 'notSplitable';
+            const name02 = 'arrayStrings';
+            const name03 = 'simpleStrings';
+            const name04 = 'arrayObjects';
+            const name05 = 'arrayObjectsSp';
+
+            beforeEach(async () => {
+                xmlData.clearData();
+                views.removeAllViews();
+
+                await createViews(
+                    [name01],
+                    dataFromXml,
+                    path01,
+                    xmlInfo,
+                    testPath
+                );
+
+                await createViews(
+                    [name02],
+                    dataFromXml,
+                    path02,
+                    xmlInfo,
+                    testPath
+                );
+
+                await createViews(
+                    [name03],
+                    dataFromXml,
+                    path03,
+                    xmlInfo,
+                    testPath
+                );
+
+                await createViews(
+                    [name04],
+                    dataFromXml,
+                    path04,
+                    xmlInfo,
+                    testPath
+                );
+
+                await createViews(
+                    [name05],
+                    dataFromXml,
+                    path05,
+                    xmlInfo,
+                    testPath
+                );
+            });
+
+            it('should return an INVALID_NAME_VIEW if the name is empty', () => {
+                const result = infoOperations.splitViewBy('',',');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+            });
+
+            it('should return INVALID_SEPARATOR_VIEW if the separator is empty', () => {
+                const result = infoOperations.splitViewBy(name01,'');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_SEPARATOR_VIEW);
+            });
+
+            it('should return VIEW_NOT_FOUND if the name doesnt match with any view', () => {
+                const testName = 'testBar';
+                const result = infoOperations.splitViewBy(testName, ',');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+                expect(result.message).toContain(testName);
+            });
+
+            it('should return VIEW_NOT_SPLITABLE if it is an array with commponents that are not splittable', () => {
+                const result = infoOperations.splitViewBy(name04, ',');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_SPLITABLE);
+                expect(result.message).toContain(name04);
+            });
+
+            it('should return VIEW_NOT_SPLITABLE if the view is not splittable', () => {
+                const result = infoOperations.splitViewBy(name01, ',');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_SPLITABLE);
+                expect(result.message).toContain(name01);
+            });
+
+            it('should return an plain array if the view is an array of strings', () => {
+                const expectedResult = ['test01', 'test02', 'test03', 'test04'];
+                const result = infoOperations.splitViewBy(name02, ',');
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+
+            it('should return an array of strings if the view is a string', () => {
+                const expectedResult = ['test01', 'test02', 'test03', 'test04'];
+                const result = infoOperations.splitViewBy(name03, ',');
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+
+            it('should return an array of strings if the view is an array and one of its elements is splittable', () => {
+                const expectedResult = ['test03', 'test04'];
+                const result = infoOperations.splitViewBy(name05, ',');
 
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
@@ -622,6 +765,57 @@ describe('Info operations controler', () => {
 
                 expect(views.getViewData).toHaveBeenCalledWith(testName);
             });
+        });
+
+        describe('splitViewBy method', () => {
+            const testName = 'testName';
+            const testData = ['test01', 'test02'];
+            beforeEach(() => {
+                views.splitViewData = jest.fn();
+                views.storeView = jest.fn();
+            });
+
+            it('should return INVALID_NAME_VIEW if the name is empty', () => {
+                const result = infoOperations.splitViewBy('', ',');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+                expect(views.splitViewData).not.toHaveBeenCalled();
+                expect(views.storeView).not.toHaveBeenCalled();
+            });
+
+            it('should return INVALID_SEPARATOR_VIEW if the separator is empty', () => {
+                const result = infoOperations.splitViewBy(testName, '');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_SEPARATOR_VIEW);
+                expect(views.splitViewData).not.toHaveBeenCalled();
+                expect(views.storeView).not.toHaveBeenCalled();
+            });
+
+            it('should return view error if there is an error during the views.splictViewData execution', () => {
+                const testError = new Error('test');
+                (views.splitViewData as jest.Mock).mockReturnValue(
+                    new ErrorApp(appResponses.VIEW_NOT_FOUND, 'Test error', testError.stack || 'test stack')
+                );
+
+                const result = infoOperations.splitViewBy(testName, ',');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+                expect(result.payload).toBe(testError.stack);
+                expect(views.storeView).not.toHaveBeenCalled();
+            });
+
+            it('should call storeView method if the splitViewData return a Response object', () => {
+                const testResponse = new Response(appResponses.OK, 'test success', testData);
+                
+                (views.splitViewData as jest.Mock).mockReturnValue(testResponse);
+                infoOperations.splitViewBy(testName, ',');
+
+                expect(views.storeView).toHaveBeenCalledWith(testName+'_split',testResponse.payload);
+            });
+
         });
     });
 });

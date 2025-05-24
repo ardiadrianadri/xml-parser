@@ -94,6 +94,36 @@ export const commandHelp: Record<string, any> = {
             }
         }
     },
+    split: {
+        text: 'Split the content of a view by a separator',
+        arg: false,
+        nodes: {
+            view: {
+                text: 'Split the content of a view',
+                arg: false,
+                nodes: {
+                    by: {
+                        text: 'Split the content of the view by a separator',
+                        arg: false,
+                        nodes: {
+                            name: {
+                                text: 'Name given to the view',
+                                arg: true,
+                                required: true,
+                                type: 'text'
+                            },
+                            separator: {
+                                text: 'Separator used to split the content of the view',
+                                arg: true,
+                                required: true,
+                                type: 'text'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     exit: {
         text: 'Close the app',
         arg: false
