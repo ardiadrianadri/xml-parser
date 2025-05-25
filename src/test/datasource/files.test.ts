@@ -71,10 +71,18 @@ describe('Data source Files', () => {
         });
 
         describe('Method writeFile', () => {
-            const content = 'Test content';
+            const content = ['line01', 'line02', 'line03'];
 
-            it('should return an error if to write the file fails', async () => {
-                const testError = new Error('test app');
+            it('should return DATA_FILE_EMPTY if the string array is empty', async () => {
+                const result = await files.writeFile(testPath, []);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.DATA_FILE_EMPTY);
+                expect(mockReadFileAsync).not.toHaveBeenCalled();
+            });
+
+            it('should return WRITE_FILE_ERROR if one of the write operations fail', async () => {
+                const testError = new Error('test');
                 mockReadFileAsync.mockRejectedValue(testError);
 
                 const result = await files.writeFile(testPath, content);
@@ -84,27 +92,30 @@ describe('Data source Files', () => {
                 expect(result.payload).toBe(testError.stack);
             });
 
-            it('should return an error with the class and the method if the error returned by the writeFile doesnt have stacktrace', async () => {
-                const testError = 'test app';
+            it('should return WRITE_FILE_ERROR if one of the write operations fails. If the error doesnt have stack data, it will send the method name', async () => {
+                const testError = 'test';
                 mockReadFileAsync.mockRejectedValue(testError);
 
-                const result = await files.writeFile(testPath, content);
+                const result = await files.writeFile(testPath,  content);
 
                 expect(result).toBeInstanceOf(ErrorApp);
                 expect(result.code).toEqual(appResponses.WRITE_FILE_ERROR);
-                expect(result.payload).toBe('File.writeFile');
+                expect(result.payload).toBe('Files.writeFile');
             });
 
-            it('should return a success response if the file was written', async () => {
-                mockReadFileAsync.mockResolvedValue('successs');
-
+            it('should return the data stored in the file if everything goes as expected', async () => {
+                mockReadFileAsync.mockResolvedValue('');
 
                 const result = await files.writeFile(testPath, content);
 
+                const calls = mockReadFileAsync.mock.calls.map((args) => args[1]);
+
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
-                expect(result.message).toContain(testPath);
+                expect(result.payload).toEqual(content);
+                expect(calls).toEqual(content);
             });
+           
         });
     });
 });
