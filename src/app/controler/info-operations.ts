@@ -102,6 +102,32 @@ class InfoOperations {
 
         return views.storeView(name + '_split', newView.payload);
     }
+
+    public async saveOneView(name: string, path: string): Promise<Response<string[]> | ErrorApp> {
+        if (!name) {
+            return new ErrorApp(appResponses.INVALID_NAME_VIEW, 'The name for the view is empty', new Error().stack);
+        }
+
+        if (!path) {
+            return new ErrorApp(appResponses.INVALID_PATH_ERROR, 'The path for the file is empty', new Error().stack);
+        }
+
+        return views.saveView(path, name);
+    }
+
+    public async saveAllViews(path: string): Promise<Response<undefined> | ErrorApp> {
+        if (!path) {
+            return new ErrorApp(appResponses.INVALID_PATH_ERROR, 'The path for the file is empty', new Error().stack);
+        }
+
+        const result = await views.saveAllViews(path);
+
+        if (result[0] instanceof ErrorApp) {
+            return result[0];
+        }
+
+        return new Response(appResponses.OK, `Views stores in path ${path}`);
+    }
 }
 
 export const infoOperations = new InfoOperations();

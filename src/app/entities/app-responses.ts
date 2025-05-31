@@ -16,5 +16,6 @@ export const appResponses = {
     VIEW_NOT_SPLITABLE: new ResponseCode('VIEW_NOT_SPLITABLE', 'The view is not splittable'),
     VIEW_NOT_FOUND: new ResponseCode('VIEW_NOT_FOUND', 'The view was not found'),
     INVALID_SEPARATOR_VIEW: new ResponseCode('INVALID_SEPARATOR_VIEW', 'The separator cant be empty'),
-    DATA_FILE_EMPTY: new ResponseCode('DATA_FILE_EMPTY', 'The data to store in the file is empty',)
+    DATA_FILE_EMPTY: new ResponseCode('DATA_FILE_EMPTY', 'The data to store in the file is empty'),
+    VIEW_STORE_EMPTY: new ResponseCode('VIEW_STORE_EMPTY', 'The store doent have any view'),
 };

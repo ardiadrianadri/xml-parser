@@ -29,8 +29,8 @@ async function createViews(viewsNames: string[], data: any, viewPath: string, xm
     (convertXML as jest.Mock).mockReturnValue(data);
 
     await infoOperations.loadXmlFile(testPath);
-    
-    for(const name of viewsNames) {
+
+    for (const name of viewsNames) {
         infoOperations.createViewNamed(viewPath, name);
     }
 }
@@ -51,93 +51,93 @@ describe('Info operations controler', () => {
             }
         };
         const infoFromXml = {
-                    node: {
-                        children: [{
-                            node0: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node1: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node2: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node3: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node4: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
+            node: {
+                children: [{
+                    node0: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
                             }
-                        }, {
-                            node0: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node1: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node2: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node3: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node4: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
+                        ]
+                    },
+                    node1: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
                             }
-                        }]
+                        ]
+                    },
+                    node2: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
+                            }
+                        ]
+                    },
+                    node3: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
+                            }
+                        ]
+                    },
+                    node4: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
+                            }
+                        ]
                     }
-                };
-                const viewPath = 'node.children.node3.children.name';
+                }, {
+                    node0: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
+                            }
+                        ]
+                    },
+                    node1: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
+                            }
+                        ]
+                    },
+                    node2: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
+                            }
+                        ]
+                    },
+                    node3: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
+                            }
+                        ]
+                    },
+                    node4: {
+                        children: [
+                            {
+                                data: 'data',
+                                name: 'name'
+                            }
+                        ]
+                    }
+                }]
+            }
+        };
+        const viewPath = 'node.children.node3.children.name';
 
         describe('loadXmlFile method', () => {
             beforeEach(() => {
@@ -211,92 +211,92 @@ describe('Info operations controler', () => {
 
         describe('createViewNamed method', () => {
             const infoFromXml = {
-                    node: {
-                        children: [{
-                            node0: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node1: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node2: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node3: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node4: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            }
-                        }, {
-                            node0: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node1: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node2: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node3: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            },
-                            node4: {
-                                children: [
-                                    {
-                                        data: 'data',
-                                        name: 'name'
-                                    }
-                                ]
-                            }
-                        }]
-                    }
-                };
+                node: {
+                    children: [{
+                        node0: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        },
+                        node1: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        },
+                        node2: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        },
+                        node3: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        },
+                        node4: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        }
+                    }, {
+                        node0: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        },
+                        node1: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        },
+                        node2: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        },
+                        node3: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        },
+                        node4: {
+                            children: [
+                                {
+                                    data: 'data',
+                                    name: 'name'
+                                }
+                            ]
+                        }
+                    }]
+                }
+            };
             const veiwName = 'intTest';
 
             beforeAll(async () => {
@@ -361,7 +361,7 @@ describe('Info operations controler', () => {
                 const expectedResult = [veiwName01, veiwName02];
 
                 const result = infoOperations.getAllViews();
-                
+
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
                 expect(result.payload).toEqual(expectedResult);
@@ -419,8 +419,8 @@ describe('Info operations controler', () => {
                             data: {
                                 array: ['test01,test02', 'test03,test04'],
                                 string: 'test01,test02,test03,test04',
-                                arrayObj: [{ value: 'test01'}, {value: 'test02'}],
-                                arrayObjSp: [{ value: 'test01,test02'}, 'test03,test04']
+                                arrayObj: [{ value: 'test01' }, { value: 'test02' }],
+                                arrayObjSp: [{ value: 'test01,test02' }, 'test03,test04']
                             }
                         }
                     ]
@@ -484,14 +484,14 @@ describe('Info operations controler', () => {
             });
 
             it('should return an INVALID_NAME_VIEW if the name is empty', () => {
-                const result = infoOperations.splitViewBy('',',');
+                const result = infoOperations.splitViewBy('', ',');
 
                 expect(result).toBeInstanceOf(ErrorApp);
                 expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
             });
 
             it('should return INVALID_SEPARATOR_VIEW if the separator is empty', () => {
-                const result = infoOperations.splitViewBy(name01,'');
+                const result = infoOperations.splitViewBy(name01, '');
 
                 expect(result).toBeInstanceOf(ErrorApp);
                 expect(result.code).toEqual(appResponses.INVALID_SEPARATOR_VIEW);
@@ -547,6 +547,125 @@ describe('Info operations controler', () => {
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
                 expect(result.payload).toEqual(expectedResult);
+            });
+        });
+
+        describe('saveOneView method', () => {
+            const veiwName01 = 'intTest01';
+            const veiwName02 = 'intTest02';
+
+            beforeEach(async () => {
+                xmlData.clearData();
+                views.removeAllViews();
+
+                await createViews(
+                    [veiwName01, veiwName02],
+                    infoFromXml,
+                    viewPath,
+                    xmlInfo,
+                    testPath
+                );
+            });
+
+            it('should return INVALID_NAME_VIEW if the view name is empty', async () => {
+                const result = await infoOperations.saveOneView('', testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+            });
+
+            it('should return INVALID_PATH_ERROR if the path is empty', async () => {
+                const result = await infoOperations.saveOneView(veiwName01, '');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_PATH_ERROR);
+            });
+
+            it('should return VIEW_NOT_FOUND if the view searched is not found', async () => {
+                const viewName = 'testView';
+                const result = await infoOperations.saveOneView(viewName, testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+                expect(result.message).toContain(viewName);
+            });
+
+            it('should return WRITE_FILE_ERROR if there is an error writting the data inside a file', async () => {
+                const testError = new Error('test');
+                mockReadFileAsync.mockRejectedValue(testError);
+
+                const result = await infoOperations.saveOneView(veiwName01, testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.WRITE_FILE_ERROR);
+                expect(result.payload).toBe(testError.stack);
+            });
+
+            it('should resturn a Response with the data stored in the file if everything goes as expected', async () => {
+                const expectedResult = ['name', 'name'];
+                mockReadFileAsync.mockResolvedValue(expectedResult);
+
+                const result = await infoOperations.saveOneView(veiwName01, testPath);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+        });
+
+        describe('saveAllViews method', () => {
+            const veiwName01 = 'intTest01';
+            const veiwName02 = 'intTest02';
+
+            beforeEach(async () => {
+                xmlData.clearData();
+                views.removeAllViews();
+
+                await createViews(
+                    [veiwName01, veiwName02],
+                    infoFromXml,
+                    viewPath,
+                    xmlInfo,
+                    testPath
+                );
+            });
+
+            it('should resturn INVALID_PATH_ERROR if the path is empty', async () => {
+                const result = await infoOperations.saveAllViews('');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_PATH_ERROR);
+            });
+
+            it('should return VIEW_STORE_EMPTY if there is no view stored in the app', async () => {
+                views.removeAllViews();
+
+                const result = await infoOperations.saveAllViews(testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_STORE_EMPTY);
+            });
+
+            it('should return WRITE_FILE_ERROR if writting the data inside the file fails', async () => {
+                const testError = new Error('test');
+                mockReadFileAsync.mockRejectedValue(testError);
+
+                const result = await infoOperations.saveAllViews(testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.WRITE_FILE_ERROR);
+                expect(result.payload).toBe(testError.stack);
+            });
+
+            it('should return a response if the views were stored in the files successfully', async () => {
+                const expectedResult = ['name', 'name', 'name', 'name'];
+                mockReadFileAsync.mockResolvedValue(expectedResult);
+
+                const result = await infoOperations.saveAllViews(testPath);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.message).toContain(testPath);
             });
         });
     });
@@ -809,13 +928,82 @@ describe('Info operations controler', () => {
 
             it('should call storeView method if the splitViewData return a Response object', () => {
                 const testResponse = new Response(appResponses.OK, 'test success', testData);
-                
+
                 (views.splitViewData as jest.Mock).mockReturnValue(testResponse);
                 infoOperations.splitViewBy(testName, ',');
 
-                expect(views.storeView).toHaveBeenCalledWith(testName+'_split',testResponse.payload);
+                expect(views.storeView).toHaveBeenCalledWith(testName + '_split', testResponse.payload);
             });
 
+        });
+
+        describe('saveAllViews method', () => {
+            beforeEach(() => {
+                views.saveAllViews = jest.fn();
+            });
+
+            it('should return INVALID_PATH_ERROR if the path is empty', async () => {
+                const result = await infoOperations.saveAllViews('');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_PATH_ERROR);
+
+                expect(views.saveAllViews).not.toHaveBeenCalled();
+            });
+
+            it('should return an Error if the method views.saveAllViews fails', async () => {
+                const testError = new Error('test');
+                const errorAppTest = new ErrorApp(appResponses.VIEW_STORE_EMPTY, 'test error', testError.stack || 'test');
+                (views.saveAllViews as jest.Mock).mockResolvedValue([errorAppTest]);
+
+                const result = await infoOperations.saveAllViews(testPath);
+
+                expect(result).toEqual(errorAppTest);
+            });
+
+            it('should resturn a Response if the views where created successfully', async () => {
+                (views.saveAllViews as jest.Mock).mockResolvedValue(
+                    new Response(appResponses.OK, 'test ok')
+                );
+
+                const result = await infoOperations.saveAllViews(testPath);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.message).toContain(testPath);
+            });
+        });
+
+        describe('saveOneView method', () => {
+            const testView = 'testView';
+
+            beforeEach(() => {
+                views.saveView = jest.fn();
+            });
+
+            it('should return INVALID_NAME_VIEW if the view name is empty', async () => {
+                const result = await infoOperations.saveOneView('', testPath);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+
+                expect(views.saveView).not.toHaveBeenCalled();
+            });
+
+            it('should return INVALID_PATH_ERROR if the path is empty', async () => {
+                const result = await infoOperations.saveOneView(testView, '');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_PATH_ERROR);
+
+                expect(views.saveView).not.toHaveBeenCalled();
+            });
+
+            it('should call views.saveViews method if the path and the view name are valid', async () => {
+                await infoOperations.saveOneView(testView, testPath);
+
+                expect(views.saveView).toHaveBeenCalledWith(testPath, testView);
+            });
         });
     });
 });
