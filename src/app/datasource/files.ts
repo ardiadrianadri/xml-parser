@@ -15,7 +15,7 @@ class Files {
         
         try {
             await Promise.all(
-                data.map((line: string) => wirteFileAsync(path, line, 'utf8'))
+                data.map((line: string) => wirteFileAsync(path, `${line}\n`, 'utf8'))
             );
 
             return new Response(appResponses.OK, `Finish writting the file ${path}`, data);

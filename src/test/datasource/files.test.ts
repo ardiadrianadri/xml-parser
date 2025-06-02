@@ -106,6 +106,7 @@ describe('Data source Files', () => {
             it('should return the data stored in the file if everything goes as expected', async () => {
                 mockReadFileAsync.mockResolvedValue('');
 
+                const expectedResult = content.map((line) => `${line}\n`);
                 const result = await files.writeFile(testPath, content);
 
                 const calls = mockReadFileAsync.mock.calls.map((args) => args[1]);
@@ -113,9 +114,8 @@ describe('Data source Files', () => {
                 expect(result).toBeInstanceOf(Response);
                 expect(result.code).toEqual(appResponses.OK);
                 expect(result.payload).toEqual(content);
-                expect(calls).toEqual(content);
+                expect(calls).toEqual(expectedResult);
             });
-           
         });
     });
 });

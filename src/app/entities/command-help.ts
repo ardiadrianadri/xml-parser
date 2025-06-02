@@ -124,6 +124,54 @@ export const commandHelp: Record<string, any> = {
             }
         }
     },
+    save: {
+        text: 'Save the data in a file',
+        arg: false,
+        nodes: {
+            one: {
+                text: 'Save the data of one view',
+                arg: false,
+                nodes: {
+                    view: {
+                        text: 'Save the data of a view in a file',
+                        arg: false,
+                        nodes: {
+                            name: {
+                                text: 'Name of the view',
+                                arg: true,
+                                required: true,
+                                type: 'text'
+                            },
+                            path: {
+                                text: 'Path where the view will be stored',
+                                arg: true,
+                                required: true,
+                                type: 'text'
+                            }
+                        }
+                    }
+                }
+            },
+            all: {
+                text: 'Save all the data in the file',
+                arg: false,
+                nodes: {
+                    views: {
+                        text: 'Save the data of all views',
+                        arg: false,
+                        nodes: {
+                            path: {
+                                text: 'Path where the views will be saved',
+                                arg: true,
+                                required: true,
+                                type: 'text'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     exit: {
         text: 'Close the app',
         arg: false
