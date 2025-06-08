@@ -128,6 +128,26 @@ class InfoOperations {
 
         return new Response(appResponses.OK, `Views stores in path ${path}`);
     }
+
+    public joinTwoViews(name1: string, name2: string): Response<any> | ErrorApp {
+        if (!name1 || !name2) {
+            return new ErrorApp(appResponses.INVALID_NAME_VIEW, 'The name for the view is empty', new Error().stack);
+        }
+
+        const joinedView = views.mixViews(name1, name2);
+
+        if (joinedView instanceof ErrorApp) {
+            return joinedView;
+        }
+
+        const createViewResult = views.storeView(name1 + '_' + name2 + '_joined', joinedView.payload);
+        
+        if (createViewResult instanceof ErrorApp) {
+            return createViewResult;
+        }
+
+        return new Response(appResponses.OK, `Views ${name1} and ${name2} joined`, createViewResult.payload);
+    }
 }
 
 export const infoOperations = new InfoOperations();
