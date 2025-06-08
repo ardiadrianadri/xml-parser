@@ -46,6 +46,7 @@ npm start
 | `split view by <name:string> <separator:string>`    | Splits the lines of a view using a separator and creates a new view from the result.     |
 | `save one view <name:string> <path:string>`         | Saves a single view to a file at the specified local path.                               |
 | `save all views <path:string>`                      | Saves each view as a separate file inside the specified local folder.                    |
+| `join two views <view1:string> <view2: string>`     | Join two views, removing all duplicate data                                              |
 
 ## Examples:
 ```

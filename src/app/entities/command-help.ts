@@ -172,6 +172,36 @@ export const commandHelp: Record<string, any> = {
             }
         }
     },
+    join: {
+        text: 'Join the content of a view',
+        arg: false,
+        nodes: {
+            two: {
+                text: 'Join the content of two views',
+                arg: false,
+                nodes: {
+                    views: {
+                        text: 'Join the content of two views',
+                        arg: false,
+                        nodes: {
+                            first: {
+                                text: 'Name of the first view',
+                                arg: true,
+                                required: true,
+                                type: 'text'
+                            },
+                            second: {
+                                text: 'Name of the second view',
+                                arg: true,
+                                required: true,
+                                type: 'text'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     exit: {
         text: 'Close the app',
         arg: false

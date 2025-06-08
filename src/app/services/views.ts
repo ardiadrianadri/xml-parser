@@ -5,6 +5,54 @@ import { join } from 'path';
 class Views {
     private viewsStored: Record<string, any> = {};
 
+    private compareDeepArray (arr1: any[], arr2: any[]): boolean {
+        if (arr1.length !== arr2.length) {
+            return false;
+        }
+
+        return JSON.stringify(arr1) === JSON.stringify(arr2);
+    }
+
+    private compareDeepObject (obj1: any, obj2: any): boolean {
+        return JSON.stringify(obj1) === JSON.stringify(obj2);
+    }
+
+    private compareDeep (obj1: any, obj2: any): boolean {
+       if (Array.isArray(obj1) && Array.isArray(obj2)) {
+            return this.compareDeepArray(obj1, obj2);
+       }
+
+       if (typeof obj1 === 'object' && typeof obj2 === 'object') {
+            return this.compareDeepObject(obj1, obj2);
+       }
+
+       if (typeof obj1 === 'string' && typeof obj2 === 'string') {
+            return obj1.trim() === obj2.trim();
+       }
+
+       if (typeof obj1 === 'number' && typeof obj2 === 'number') {
+            return obj1 === obj2;
+       }
+
+       if (typeof obj1 === 'boolean' && typeof obj2 === 'boolean') {
+            return obj1 === obj2;
+       }
+
+        return false;
+        
+    }
+
+    private removeDuplicated(data: any[]): any[] {
+        const uniqueData: any[] = [];
+        for (const item of data) {
+            if (!uniqueData.some(existingItem => this.compareDeep(existingItem, item))) {
+                uniqueData.push(item);
+            }
+        }
+
+        return uniqueData;
+    }
+
     public storeView(name: string, data: any): Response<any> | ErrorApp {
         if (!data) {
             return new ErrorApp(appResponses.DATA_TO_VIEW_EMPTY, `The data recived has the value ${data}`, new Error().stack);
@@ -92,6 +140,19 @@ class Views {
         }
 
         return files.writeFile(join(path, `${view}.txt`), content);
+    }
+
+    public mixViews (name1: string, name2: string): Response<any> | ErrorApp {
+        const view1 = this.viewsStored[name1];
+        const view2 = this.viewsStored[name2];
+
+        if (!view1 || !view2) {
+            return new ErrorApp(appResponses.VIEW_NOT_FOUND, `One of the views ${name1} or ${name2} does not exist`, new Error().stack);
+        }
+
+        const joinedData = [...view1, ...view2];
+        const mixedData = this.removeDuplicated(joinedData);
+        return new Response(appResponses.OK, `The views ${name1} and ${name2} were mixed successfully`, mixedData);
     }
 }
 

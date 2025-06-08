@@ -317,5 +317,108 @@ describe('Service Views', () => {
                 expect(results).toEqual(expectedResponse);
             });
         });
+
+        describe('mixViews methos', () => {
+            const nameView01 = 'view01';
+            const view01Data = ['line01', 'line02'];
+            const nameView02 = 'view02';
+            const view02Data = ['line02', 'line03', 'line04'];
+            const nameView03 = 'view03';
+            const view03Data = [1, 2, 3];
+            const nameView04 = 'view04';
+            const view04Data = [7.6,4,5,3];
+            const nameView05 = 'view05';
+            const view05Data = [true, false, true];
+            const nameView06 = 'view06';
+            const view06Data = [true, false, true, 'test'];
+            const nameView07 = 'view07';
+            const view07Data = [[1,2,3],[3,4,5], [6,7,8]];
+            const nameView08 = 'view08';
+            const view08Data = [[10,11,12], [9,8,7],[6,5,4,3]];
+            const nameView09 = 'view09';
+            const view09Data = [{ key: 'value' }, { key: 'value2' }];
+            const nameView10 = 'view10';
+            const view10Data = [{ key: 'value3' }, { key: 'value4' }];
+
+            const allViews = [
+                { name: nameView01, data: view01Data },
+                { name: nameView02, data: view02Data },
+                { name: nameView03, data: view03Data },
+                { name: nameView04, data: view04Data },
+                { name: nameView05, data: view05Data },
+                { name: nameView06, data: view06Data },
+                { name: nameView07, data: view07Data },
+                { name: nameView08, data: view08Data },
+                { name: nameView09, data: view09Data },
+                { name: nameView10, data: view10Data }
+            ];
+
+            beforeEach(() => {
+                views.removeAllViews();
+
+                for (const view of allViews) {
+                    views.storeView(view.name, view.data);
+                }
+            });
+
+            it('should return an ErrorApp if there is no view stored', () => {
+                views.removeAllViews();
+
+                const result = views.mixViews('view01', 'view02');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+                expect(result.message).toContain('view01');
+                expect(result.message).toContain('view02');
+            });
+
+            it('should return an mixed view of string if both views are strings', () => {
+                const result = views.mixViews(nameView01, nameView02);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(['line01', 'line02', 'line03', 'line04']);
+            });
+
+            it('should return an mixed view of numbers if both views are numbers', () => {
+                const result = views.mixViews(nameView03, nameView04);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual([1, 2, 3, 7.6, 4, 5]);
+            });
+
+            it('should return an mixed view of booleans if both views are booleans', () => {
+                const result = views.mixViews(nameView05, nameView06);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual([true, false, 'test']);
+            });
+
+            it('should return an mixed view of arrays if both views are arrays', () => {
+                const result = views.mixViews(nameView07, nameView08);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual([[1, 2, 3], [3, 4, 5], [6, 7, 8], [10, 11, 12], [9, 8, 7], [6, 5, 4,3]]);
+            });
+
+            it('should return an mixed view of objects if both views are objects', () => {
+                const result = views.mixViews(nameView09, nameView10);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual([{ key: 'value' }, { key: 'value2' }, { key: 'value3' }, { key: 'value4' }]);
+            });
+
+            it('should return an mixed view of different types if the views are different', () => {
+                const result = views.mixViews(nameView01, nameView03);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(['line01', 'line02', 1, 2, 3]);
+            });
+        });
     });
 });

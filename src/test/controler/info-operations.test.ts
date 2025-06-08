@@ -668,6 +668,77 @@ describe('Info operations controler', () => {
                 expect(result.message).toContain(testPath);
             });
         });
+
+        describe('joinTwoViews method', () => {
+            const viewName01 = 'intTest01';
+            const viewName02 = 'intTest02';
+
+            const viewPath01 = 'node.children.node3.children.name';
+            const viewPath02 = 'node.children.node4';
+
+            beforeEach(async () => {
+                xmlData.clearData();
+                views.removeAllViews();
+
+                await createViews(
+                    [viewName01],
+                    infoFromXml,
+                    viewPath01,
+                    xmlInfo,
+                    testPath
+                );
+
+                await createViews(
+                    [viewName02],
+                    infoFromXml,
+                    viewPath02,
+                    xmlInfo,
+                    testPath
+                );
+            });
+
+            it('should return INVALID_NAME_VIEW if the first name is empty', () => {
+                const result = infoOperations.joinTwoViews('', viewName02);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+            });
+
+            it('should return INVALID_NAME_VIEW if the second name is empty', () => {
+                const result = infoOperations.joinTwoViews(viewName01, '');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+            });
+
+            it('should return VIEW_NOT_FOUND if the first name doesnt match with any view', () => {
+                const testName = 'test';
+                const result = infoOperations.joinTwoViews(testName, viewName02);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+                expect(result.message).toContain(testName);
+            });
+
+            it('should return VIEW_NOT_FOUND if the second name doesnt match with any view', () => {
+                const testName = 'test';
+                const result = infoOperations.joinTwoViews(viewName01, testName);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+                expect(result.message).toContain(testName);
+            });
+
+            it('should create a new view with the joined data of the two views', () => {
+                const expectedResult = ['name', { 'children': [{ 'data': 'data', 'name': 'name' }] }];
+
+                const result = infoOperations.joinTwoViews(viewName01, viewName02);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+            });
+        });
     });
 
     describe('Unit test', () => {
@@ -1003,6 +1074,77 @@ describe('Info operations controler', () => {
                 await infoOperations.saveOneView(testView, testPath);
 
                 expect(views.saveView).toHaveBeenCalledWith(testPath, testView);
+            });
+        });
+
+        describe('joinTwoViews method', () => {
+            const testView01 = 'testView01';
+            const testView02 = 'testView02';
+
+            beforeEach(() => {
+                views.mixViews = jest.fn();
+                views.storeView = jest.fn();
+            });
+
+            it('should return an INVALID_NAME_VIEW if the first name is empty', () => {
+                const result = infoOperations.joinTwoViews('', testView02);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+                expect(views.mixViews).not.toHaveBeenCalled();
+                expect(views.storeView).not.toHaveBeenCalled();
+            });
+
+            it('should return an INVALID_NAME_VIEW if the second name is empty', () => {
+                const result = infoOperations.joinTwoViews(testView01, '');
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.INVALID_NAME_VIEW);
+                expect(views.mixViews).not.toHaveBeenCalled();
+                expect(views.storeView).not.toHaveBeenCalled();
+            });
+
+            it('should return an Error if the views.mixViews method returns an ErrorApp', () => {
+                const testError = new Error('test');
+                (views.mixViews as jest.Mock).mockReturnValue(
+                    new ErrorApp(appResponses.VIEW_NOT_FOUND, 'Test error', testError.stack || 'test stack')
+                );
+
+                const result = infoOperations.joinTwoViews(testView01, testView02);
+
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_NOT_FOUND);
+                expect(result.payload).toBe(testError.stack);
+                expect(views.storeView).not.toHaveBeenCalled();
+            });
+
+            it('should return an Error if the views.storeView method restuns an ErrorApp', () => {
+                const testResponse = new Response(appResponses.OK, 'test success', { joined: true });
+                (views.mixViews as jest.Mock).mockReturnValue(testResponse);
+                (views.storeView as jest.Mock).mockReturnValue(
+                    new ErrorApp(appResponses.VIEW_STORE_EMPTY, 'test error', 'test stack')
+                );
+
+                const result = infoOperations.joinTwoViews(testView01, testView02);
+
+                expect(views.storeView).toHaveBeenCalledWith(`${testView01}_${testView02}_joined`, testResponse.payload);
+                expect(result).toBeInstanceOf(ErrorApp);
+                expect(result.code).toEqual(appResponses.VIEW_STORE_EMPTY);
+                expect(result.payload).toBe('test stack');
+            });
+
+            it('should return a Response with the joined data if everything goes as expected', () => {
+                const expectedResult = { joined: true };
+                const testResponse = new Response(appResponses.OK, 'test success', expectedResult);
+                (views.mixViews as jest.Mock).mockReturnValue(testResponse);
+                (views.storeView as jest.Mock).mockReturnValue(testResponse);
+
+                const result = infoOperations.joinTwoViews(testView01, testView02);
+
+                expect(result).toBeInstanceOf(Response);
+                expect(result.code).toEqual(appResponses.OK);
+                expect(result.payload).toEqual(expectedResult);
+                expect(views.storeView).toHaveBeenCalledWith(`${testView01}_${testView02}_joined`, expectedResult);
             });
         });
     });
